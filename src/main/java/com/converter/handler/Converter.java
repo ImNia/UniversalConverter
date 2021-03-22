@@ -4,29 +4,35 @@ import com.converter.parcing.ConversionRuleImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import static com.converter.Application.allRules;
 
 public class Converter {
     static MathContext context = new MathContext(5);
     //Когда нет деления
+    private static double internalCheck(ConversionRuleImpl currentRule, String dataExpFrom, String dataExpTo) {
+        if (currentRule.getFromValue().equals(dataExpFrom.trim())) {
+            if (currentRule.getToValue().equals(dataExpTo.trim())) {
+                return currentRule.getValue();
+            }
+        }
+        return -1.0;
+    }
+
     private static double calculationValue(String[] dataExpFrom, String[] dataExpTo) {
-//        double resultExp = 1;
         BigDecimal resultExp = new BigDecimal(1.0);
-        //TODO регистры
-//        System.out.println(dataExpFrom[0] + " : " + dataExpTo[0]);
+        double value = 0.0;
         for (int i = 0; i < dataExpFrom.length; i++) {
             for (ConversionRuleImpl currentRule : allRules) {
-//                System.out.println(currentRule.getFromValue() + " : " + currentRule.getToValue() + " : " + currentRule.getValue());
-                if (currentRule.getFromValue().equals(dataExpFrom[i].trim())) {
-                    if (currentRule.getToValue().equals(dataExpTo[i].trim())) {
-//                        System.out.println(currentRule.getFromValue() + " : " + currentRule.getToValue() + " : " + currentRule.getValue());
-                        System.out.println(resultExp + " * " + currentRule.getValue()
-                                    + " : " + BigDecimal.valueOf(currentRule.getValue()));
-                        resultExp = resultExp.multiply(BigDecimal.valueOf(currentRule.getValue()), context);
-                        break;
+                for (String dataTo: dataExpTo) {
+                    value = internalCheck(currentRule, dataExpFrom[i].toLowerCase(Locale.ROOT), dataTo.toLowerCase(Locale.ROOT));
+                    if (value != -1.0) {
+                        resultExp = resultExp.multiply(BigDecimal.valueOf(value), context);
                     }
                 }
             }
@@ -39,20 +45,17 @@ public class Converter {
     private static double calculationValue(String[] dataExpFromNumerator, String[] dataExpFromDenumirator,
                                          String[] dataExpToNumerator, String[] dataExpToDenumirator) {
         BigDecimal resultExp = new BigDecimal(1.0);
-//        System.out.println(resultExp + " : " + calculationValue(dataExpFromNumerator, dataExpToDenumirator));
         resultExp = resultExp.multiply(BigDecimal.valueOf(calculationValue(dataExpFromNumerator, dataExpToNumerator)), context);
-//        System.out.println(resultExp + " : " + calculationValue(dataExpFromNumerator, dataExpToDenumirator));
         resultExp = resultExp.divide(BigDecimal.valueOf(calculationValue(dataExpFromDenumirator, dataExpToDenumirator)), context);
-//        System.out.println(resultExp);
         return resultExp.doubleValue();
     }
 
     public static boolean checkValueExist(String[] checkValue) {
         int countCheck = 0;
+
         for (String currentValue: checkValue) {
             for (ConversionRuleImpl currentRule : allRules) {
-                if (currentRule.getFromValue().equals(currentValue.trim())) {
-                    System.out.println("asd: " + currentValue);
+                if (currentRule.getFromValue().equals(currentValue.trim().toLowerCase(Locale.ROOT))) {
                     countCheck++;
                     break;
                 }
@@ -65,8 +68,14 @@ public class Converter {
         String[] dataDivideFrom = getMessage.getFrom().split("/");
         String[] dataDivideTo = getMessage.getTo().split("/");
 
-        if (checkValueExist(dataDivideFrom) && checkValueExist(dataDivideTo)) {
-            //TODO могут быть не одинаковые
+        boolean check = true;
+        for (String valueCheck: dataDivideFrom) {
+            check = check && checkValueExist(valueCheck.split("\\*"));
+        }
+        for (String valueCheck: dataDivideTo) {
+            check = check && checkValueExist(valueCheck.split("\\*"));
+        }
+        if (check) {
             switch (dataDivideFrom.length) {
                 case 1:
                     return calculationValue(dataDivideFrom[0].split("\\*"), dataDivideTo[0].split("\\*"));

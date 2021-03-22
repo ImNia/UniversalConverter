@@ -5,11 +5,11 @@ import au.com.bytecode.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ParcingFile {
-    //TODO Generic??
     private static ArrayList<ConversionRuleImpl> addDependValue(ArrayList<ConversionRuleImpl> arrayRules) {
-        ArrayList<ConversionRuleImpl> arrayRulesTmp = new ArrayList(arrayRules);
+        ArrayList<ConversionRuleImpl> arrayRulesTmp = new ArrayList<>(arrayRules);
         do {
             arrayRules = (ArrayList<ConversionRuleImpl>)arrayRulesTmp.clone();
             for (ConversionRuleImpl currentRuleFrom : arrayRules) {
@@ -39,19 +39,17 @@ public class ParcingFile {
     }
 
     public static ArrayList<ConversionRuleImpl> parcingFile(String filePath) {
-        //TODO Кодировка
-        ArrayList<ConversionRuleImpl> arrayRules = new ArrayList();
+        ArrayList<ConversionRuleImpl> arrayRules = new ArrayList<>();
         char csvSplitBy = ',';
         try {
             CSVReader reader = new CSVReader(new FileReader(filePath), csvSplitBy);
             String[] stringOfData;
             while((stringOfData = reader.readNext()) != null) {
                 if (stringOfData.length == 3) {
-                    ConversionRuleImpl getRuleUnit = new ConversionRuleImpl(stringOfData[0].trim(), stringOfData[1].trim(),
-                            Double.parseDouble(stringOfData[2]));
-                    //TODO А если не прямо зависят
-                    ConversionRuleImpl getRuleUnitReverse = new ConversionRuleImpl(stringOfData[1].trim(), stringOfData[0].trim(),
-                            1 / Double.parseDouble(stringOfData[2])); //TODO точность
+                    ConversionRuleImpl getRuleUnit = new ConversionRuleImpl(stringOfData[0].trim().toLowerCase(Locale.ROOT),
+                            stringOfData[1].trim().toLowerCase(Locale.ROOT), Double.parseDouble(stringOfData[2]));
+                    ConversionRuleImpl getRuleUnitReverse = new ConversionRuleImpl(stringOfData[1].trim().toLowerCase(Locale.ROOT),
+                            stringOfData[0].trim().toLowerCase(Locale.ROOT), 1.0 / Double.parseDouble(stringOfData[2]));
                     arrayRules.add(getRuleUnit);
                     arrayRules.add(getRuleUnitReverse);
                 } else {
