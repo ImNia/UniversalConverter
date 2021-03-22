@@ -10,7 +10,7 @@ public class ParcingFile {
     //TODO Generic??
     private static ArrayList<ConversionRuleImpl> addDependValue(ArrayList<ConversionRuleImpl> arrayRules) {
         ArrayList<ConversionRuleImpl> arrayRulesTmp = new ArrayList(arrayRules);
-        for (int i = 0; i < 5; i++) {
+        do {
             arrayRules = (ArrayList<ConversionRuleImpl>)arrayRulesTmp.clone();
             for (ConversionRuleImpl currentRuleFrom : arrayRules) {
                 for (ConversionRuleImpl currentRuleTo : arrayRules) {
@@ -34,7 +34,7 @@ public class ParcingFile {
                     }
                 }
             }
-        }// while (!arrayRules.containsAll(arrayRulesTmp));
+        } while (!arrayRules.containsAll(arrayRulesTmp));
         return arrayRulesTmp;
     }
 
@@ -47,10 +47,10 @@ public class ParcingFile {
             String[] stringOfData;
             while((stringOfData = reader.readNext()) != null) {
                 if (stringOfData.length == 3) {
-                    ConversionRuleImpl getRuleUnit = new ConversionRuleImpl(stringOfData[0], stringOfData[1],
+                    ConversionRuleImpl getRuleUnit = new ConversionRuleImpl(stringOfData[0].trim(), stringOfData[1].trim(),
                             Double.parseDouble(stringOfData[2]));
                     //TODO А если не прямо зависят
-                    ConversionRuleImpl getRuleUnitReverse = new ConversionRuleImpl(stringOfData[1], stringOfData[0],
+                    ConversionRuleImpl getRuleUnitReverse = new ConversionRuleImpl(stringOfData[1].trim(), stringOfData[0].trim(),
                             1 / Double.parseDouble(stringOfData[2])); //TODO точность
                     arrayRules.add(getRuleUnit);
                     arrayRules.add(getRuleUnitReverse);
@@ -62,13 +62,12 @@ public class ParcingFile {
             System.out.println(ex.getMessage());
         }
 
-        ArrayList<ConversionRuleImpl> arrayRulesDepend = new ArrayList();
-        arrayRulesDepend = addDependValue(arrayRules);
+        ArrayList<ConversionRuleImpl> arrayRulesDepend = addDependValue(arrayRules);
         for (ConversionRuleImpl tmp: arrayRulesDepend) {
             System.out.printf("%s\t%s\t%s\t", tmp.getFromValue(), tmp.getToValue(), tmp.getValue());
             System.out.println();
         }
         System.out.println();
-        return arrayRules;
+        return arrayRulesDepend;
     }
 }

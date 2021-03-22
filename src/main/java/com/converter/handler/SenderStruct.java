@@ -1,7 +1,6 @@
 package com.converter.handler;
 
 public class SenderStruct {
-    //TODO другие имена
     private String from;
     private String to;
 
@@ -11,19 +10,19 @@ public class SenderStruct {
         this.to = to;
     }
 
-    public String getFromValue() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFromValue(String fromValue) {
+    public void setFrom(String fromValue) {
         this.from = fromValue;
     }
 
-    public String getToValue() {
+    public String getTo() {
         return to;
     }
 
-    public void setToValue(String toValue) {
+    public void setTo(String toValue) {
         this.to = toValue;
     }
 }

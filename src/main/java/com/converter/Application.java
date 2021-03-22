@@ -17,7 +17,7 @@ public class Application {
     public static void main(String[] args) {
         allRules = new ArrayList<>();
         //TODO файл
-        allRules = parcingFile("data.csv");
+        allRules = parcingFile("dataEng.csv");
         SpringApplication.run(Application.class, args);
 
 //        if (args.length == 0) {

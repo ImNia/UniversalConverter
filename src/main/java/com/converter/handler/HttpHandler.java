@@ -8,9 +8,10 @@ import static com.converter.handler.Converter.converterValue;
 
 @RestController
 public class HttpHandler {
-    @PostMapping(value = "/convert", consumes = "application/json")
-    public void convertGetMessage(@RequestBody SenderStruct getMessage) {
+    //TODO независит от имен
+    @PostMapping(value = "/convert", consumes = "application/json; charset=utf-16")
+    public ReceiveStruct convertGetMessage(@RequestBody SenderStruct getMessage) {
         System.out.println("I get POST message, thanks");
-        converterValue(getMessage);
+        return new ReceiveStruct(converterValue(getMessage));
     }
 }

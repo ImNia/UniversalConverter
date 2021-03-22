@@ -6,6 +6,7 @@ public class ConversionRuleImpl implements ConversionRule{
     private String fromValue;
     private String toValue;
     private double value;
+
     public ConversionRuleImpl(String srcValue, String dstValue, double value) {
         this.fromValue = srcValue;
         this.toValue = dstValue;
@@ -22,7 +23,7 @@ public class ConversionRuleImpl implements ConversionRule{
     }
 
     public double getValue() {
-        return value;
+        return (double)Math.round(value * 100000d) / 100000d;
     }
 
     @Override
