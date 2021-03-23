@@ -13,7 +13,7 @@ import java.util.Locale;
 import static com.converter.Application.allRules;
 
 public class Converter {
-    static MathContext context = new MathContext(5);
+    static MathContext context = new MathContext(5); //TODO исправить до 15
     //Когда нет деления
     private static double internalCheck(ConversionRuleImpl currentRule, String dataExpFrom, String dataExpTo) {
         if (currentRule.getFromValue().equals(dataExpFrom.trim())) {
@@ -26,18 +26,24 @@ public class Converter {
 
     private static double calculationValue(String[] dataExpFrom, String[] dataExpTo) {
         BigDecimal resultExp = new BigDecimal(1.0);
+        boolean conformValue = false;
         double value = 0.0;
         for (int i = 0; i < dataExpFrom.length; i++) {
             for (ConversionRuleImpl currentRule : allRules) {
-                for (String dataTo: dataExpTo) {
+                for (String dataTo : dataExpTo) {
                     value = internalCheck(currentRule, dataExpFrom[i].toLowerCase(Locale.ROOT), dataTo.toLowerCase(Locale.ROOT));
                     if (value != -1.0) {
                         resultExp = resultExp.multiply(BigDecimal.valueOf(value), context);
+                        conformValue = true;
+                        break;
                     }
                 }
             }
         }
         System.out.println("Rsult: " + resultExp);
+        if (!conformValue) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         return resultExp.doubleValue();
     }
 
