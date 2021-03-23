@@ -4,10 +4,8 @@ import com.converter.parcing.ConversionRuleImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import static com.converter.Application.allRules;
@@ -28,14 +26,22 @@ public class Converter {
         BigDecimal resultExp = new BigDecimal(1.0);
         boolean conformValue = false;
         double value = 0.0;
+
         for (int i = 0; i < dataExpFrom.length; i++) {
-            for (ConversionRuleImpl currentRule : allRules) {
-                for (String dataTo : dataExpTo) {
-                    value = internalCheck(currentRule, dataExpFrom[i].toLowerCase(Locale.ROOT), dataTo.toLowerCase(Locale.ROOT));
-                    if (value != -1.0) {
-                        resultExp = resultExp.multiply(BigDecimal.valueOf(value), context);
-                        conformValue = true;
-                        break;
+            System.out.println(dataExpFrom[i]);
+            if (dataExpFrom[i].trim().matches("[0-9]+")) {
+                System.out.println("Hello, we are in cycle");
+                resultExp = resultExp.multiply(BigDecimal.valueOf(Long.parseLong(dataExpFrom[i].trim())));
+                conformValue = true;
+            } else {
+                for (ConversionRuleImpl currentRule : allRules) {
+                    for (String dataTo : dataExpTo) {
+                        value = internalCheck(currentRule, dataExpFrom[i].toLowerCase(Locale.ROOT), dataTo.toLowerCase(Locale.ROOT));
+                        if (value != -1.0) {
+                            resultExp = resultExp.multiply(BigDecimal.valueOf(value), context);
+                            conformValue = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -59,6 +65,10 @@ public class Converter {
     public static boolean checkValueExist(String[] checkValue) {
         int countCheck = 0;
 
+        System.out.println("check: " + checkValue.length + " / " + checkValue[0]);
+        if (checkValue.length == 1 && checkValue[0].trim().matches("[0-9]+")) {
+            return true;
+        }
         for (String currentValue: checkValue) {
             for (ConversionRuleImpl currentRule : allRules) {
                 if (currentRule.getFromValue().equals(currentValue.trim().toLowerCase(Locale.ROOT))) {

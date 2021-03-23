@@ -13,7 +13,7 @@ import static com.converter.parcing.ParcingFile.parcingFile;
 public class Application {
     @Autowired
     public static ArrayList<ConversionRuleImpl> allRules;
-    //TODO Java Code Conventions
+
     public static void main(String[] args) {
         allRules = new ArrayList<>();
         //TODO файл

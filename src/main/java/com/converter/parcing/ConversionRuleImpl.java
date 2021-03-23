@@ -2,7 +2,7 @@ package com.converter.parcing;
 
 import java.util.Objects;
 
-public class ConversionRuleImpl implements ConversionRule{
+public class ConversionRuleImpl{
     private String fromValue;
     private String toValue;
     private double value;

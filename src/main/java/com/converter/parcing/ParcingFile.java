@@ -61,11 +61,11 @@ public class ParcingFile {
         }
 
         ArrayList<ConversionRuleImpl> arrayRulesDepend = addDependValue(arrayRules);
-        for (ConversionRuleImpl tmp: arrayRulesDepend) {
-            System.out.printf("%s\t%s\t%s\t", tmp.getFromValue(), tmp.getToValue(), tmp.getValue());
-            System.out.println();
-        }
-        System.out.println();
+//        for (ConversionRuleImpl tmp: arrayRulesDepend) {
+//            System.out.printf("%s\t%s\t%s\t", tmp.getFromValue(), tmp.getToValue(), tmp.getValue());
+//            System.out.println();
+//        }
+//        System.out.println();
         return arrayRulesDepend;
     }
 }
