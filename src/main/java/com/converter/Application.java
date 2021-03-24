@@ -16,14 +16,13 @@ public class Application {
 
     public static void main(String[] args) {
         allRules = new ArrayList<>();
-        //TODO файл
-        allRules = parcingFile("dataEng.csv");
-        SpringApplication.run(Application.class, args);
-
-//        if (args.length == 0) {
-//            System.out.println("Not have file");
-//        } else if (args.length == 1)
-
-//        }
+        if (args.length == 0) {
+            System.out.println("Not have file");
+        } else if (args.length == 1) {
+            allRules = parcingFile(args[0]);
+            SpringApplication.run(Application.class, args);
+        } else {
+            System.out.println("Incorrect number of arguments");
+        }
     }
 }

@@ -11,7 +11,7 @@ import java.util.Locale;
 import static com.converter.Application.allRules;
 
 public class Converter {
-    static MathContext context = new MathContext(5); //TODO исправить до 15
+    static MathContext context = new MathContext(15);
     //Когда нет деления
     private static double internalCheck(ConversionRuleImpl currentRule, String dataExpFrom, String dataExpTo) {
         if (currentRule.getFromValue().equals(dataExpFrom.trim())) {
@@ -28,9 +28,7 @@ public class Converter {
         double value = 0.0;
 
         for (int i = 0; i < dataExpFrom.length; i++) {
-            System.out.println(dataExpFrom[i]);
             if (dataExpFrom[i].trim().matches("[0-9]+")) {
-                System.out.println("Hello, we are in cycle");
                 resultExp = resultExp.multiply(BigDecimal.valueOf(Long.parseLong(dataExpFrom[i].trim())));
                 conformValue = true;
             } else {
@@ -40,13 +38,12 @@ public class Converter {
                         if (value != -1.0) {
                             resultExp = resultExp.multiply(BigDecimal.valueOf(value), context);
                             conformValue = true;
-                            break;
                         }
                     }
                 }
             }
         }
-        System.out.println("Rsult: " + resultExp);
+
         if (!conformValue) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -65,7 +62,6 @@ public class Converter {
     public static boolean checkValueExist(String[] checkValue) {
         int countCheck = 0;
 
-        System.out.println("check: " + checkValue.length + " / " + checkValue[0]);
         if (checkValue.length == 1 && checkValue[0].trim().matches("[0-9]+")) {
             return true;
         }
@@ -99,7 +95,6 @@ public class Converter {
                     return calculationValue(dataDivideFrom[0].split("\\*"), dataDivideFrom[1].split("\\*"),
                             dataDivideTo[0].split("\\*"), dataDivideTo[1].split("\\*"));
                 default:
-                    System.out.println("Что-то пошло не так");
                     break;
             }
         } else {

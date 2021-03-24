@@ -10,7 +10,6 @@ import static com.converter.handler.Converter.converterValue;
 public class HttpHandler {
     @PostMapping(value = "/convert", consumes = "application/json; charset=utf-8")
     public ReceiveStruct convertGetMessage(@RequestBody SenderStruct getMessage) {
-        System.out.println("I get POST message, thanks");
         return new ReceiveStruct(converterValue(getMessage));
     }
 }
