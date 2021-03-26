@@ -12,8 +12,8 @@
     </parent>
 
     <groupId>com.converter</groupId>
-    <artifactId>UniversalConverter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>universal-converter</artifactId>
+    <version>1.0.0</version>
 
     <dependencies>
         <dependency>
@@ -50,6 +50,40 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+<!--        <server.port>80</server.port>-->
     </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/com/converter</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>
+                                com.converter.Application
+                            </mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>

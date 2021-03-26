@@ -16,6 +16,7 @@ public class Application {
 
     public static void main(String[] args) {
         allRules = new ArrayList<>();
+
         if (args.length == 0) {
             System.out.println("Not have file");
         } else if (args.length == 1) {
